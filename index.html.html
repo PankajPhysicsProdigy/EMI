@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning: Electromagnetic Induction (Class XII)</title>
+    <style>
+        /* --- General Page Styles --- */
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #007bff;
+        }
+
+        /* --- Section & Interactive Element Styles --- */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .interactive-area {
+            background-color: #e9f5ff;
+            border: 1px solid #bde0fe;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .controls {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .visualization {
+            flex: 2;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #flux-output, #emf-output {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #d9534f;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        /* --- Lenz's Law Canvas Simulation --- */
+        canvas {
+            border: 2px solid #0056b3;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        #lenz-law-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+            min-height: 40px;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* --- Quiz Styles --- */
+        .quiz-form .question {
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff;
+        }
+        .quiz-form .options label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .quiz-form .options label:hover {
+            background-color: #e9ecef;
+        }
+
+        #quiz-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        #quiz-submit:hover {
+            background-color: #218838;
+        }
+
+        #quiz-results {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .correct { border-left: 5px solid #28a745; }
+        .incorrect { border-left: 5px solid #dc3545; }
+        
+        /* --- Glossary & Video Styles --- */
+        .glossary details {
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .glossary summary {
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #0056b3;
+        }
+        .glossary p {
+            padding: 0 15px 10px 15px;
+            margin: 0;
+        }
+
+        .video-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            margin-top: 20px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Interactive Learning: Electromagnetic Induction</h1>
+            <p>For Class XII Physics Students</p>
+            <p>By Pankaj Sharma</p>
+        </header>
+
+        <!-- Section 1: Magnetic Flux -->
+        <div id="section1" class="section">
+            <h2>1. Understanding Magnetic Flux (Φ)</h2>
+            <p>Magnetic flux is the measure of the total magnetic field lines passing through a given area. It's the first step to understanding induction. The formula is: <strong>Φ = B ⋅ A ⋅ cos(θ)</strong>, where:</p>
+            <ul>
+                <li><strong>B</strong> is the magnetic field strength.</li>
+                <li><strong>A</strong> is the area of the coil.</li>
+                <li><strong>θ</strong> (theta) is the angle between the magnetic field lines and the normal (perpendicular) to the coil's area.</li>
+            </ul>
+            <p>Use the sliders below to see how these factors affect the magnetic flux.</p>
+            
+            <div class="interactive-area">
+                <div class="controls">
+                    <h3>Controls</h3>
+                    <div class="slider-container">
+                        <label for="b-slider">Magnetic Field (B): <span id="b-value">0.5</span> T</label>
+                        <input type="range" id="b-slider" min="0" max="1" step="0.01" value="0.5">
+                    </div>
+                    <div class="slider-container">
+                        <label for="a-slider">Area (A): <span id="a-value">0.5</span> m²</label>
+                        <input type="range" id="a-slider" min="0" max="1" step="0.01" value="0.5">
+                    </div>
+                    <div class="slider-container">
+                        <label for="theta-slider">Angle (θ): <span id="theta-value">0</span>°</label>
+                        <input type="range" id="theta-slider" min="0" max="90" step="1" value="0">
+                    </div>
+                </div>
+                <div class="visualization">
+                    <h3>Calculated Magnetic Flux (Φ)</h3>
+                    <div id="flux-output">0.25 Wb</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Faraday's and Lenz's Law -->
+        <div id="section2" class="section">
+            <h2>2. Faraday's Law and Lenz's Law in Action</h2>
+            <p><strong>Faraday's Law of Induction</strong> states that a changing magnetic flux through a coil induces an electromotive force (EMF or voltage). Formula: <strong>ε = -dΦ/dt</strong>.</p>
+            <p><strong>Lenz's Law</strong> gives the direction of the induced current (and explains the negative sign!). It states that the induced current will flow in a direction that opposes the very change in flux that produced it.</p>
+            <p><strong>Try it yourself!</strong> Drag the bar magnet towards or away from the coil. Observe the galvanometer needle and the direction of the current.</p>
+
+            <div class="interactive-area" style="flex-direction: column;">
+                <canvas id="lenz-law-canvas" width="600" height="250"></canvas>
+                <div id="lenz-law-explanation">Move the magnet to see what happens.</div>
+            </div>
+        </div>
+
+        <!-- Section 3: Quick Quiz -->
+        <div id="section3" class="section">
+            <h2>3. Test Your Knowledge!</h2>
+            <p>Check your understanding with this quick quiz. Choose the best answer and see your score at the end.</p>
+            <form id="quiz-form" class="quiz-form">
+                <div class="question" id="q1-container">
+                    <p><strong>1. Lenz's law is a consequence of the law of conservation of:</strong></p>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="charge"> Charge</label>
+                        <label><input type="radio" name="q1" value="energy"> Energy</label>
+                        <label><input type="radio" name="q1" value="mass"> Mass</label>
+                        <label><input type="radio" name="q1" value="momentum"> Momentum</label>
+                    </div>
+                </div>
+                <div class="question" id="q2-container">
+                    <p><strong>2. If the North pole of a magnet is moved towards a coil, the face of the coil facing the magnet will behave as a:</strong></p>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="north"> North pole</label>
+                        <label><input type="radio" name="q2" value="south"> South pole</label>
+                        <label><input type="radio" name="q2" value="no pole"> It will not have polarity</label>
+                    </div>
+                </div>
+                <div class="question" id="q3-container">
+                    <p><strong>3. An induced EMF is produced when a magnet is plunged into a coil. The magnitude of induced EMF does NOT depend on:</strong></p>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="strength"> The strength of the magnet</label>
+                        <label><input type="radio" name="q3" value="speed"> The speed with which the magnet is moved</label>
+                        <label><input type="radio" name="q3" value="turns"> The number of turns in the coil</label>
+                        <label><input type="radio" name="q3" value="resistance"> The resistance of the coil's wire</label>
+                    </div>
+                </div>
+                <button type="submit" id="quiz-submit">Check Answers</button>
+            </form>
+            <div id="quiz-results"></div>
+        </div>
+        
+        <!-- Section 4: Key Terms Glossary -->
+        <div id="section4" class="section">
+            <h2>4. Key Terms Glossary</h2>
+            <p>Click on a term to reveal its definition.</p>
+            <div class="glossary">
+                <details>
+                    <summary>Electromagnetic Induction (EMI)</summary>
+                    <p>The phenomenon of producing an electromotive force (EMF) across an electrical conductor in a changing magnetic field.</p>
+                </details>
+                <details>
+                    <summary>Magnetic Flux (Φ)</summary>
+                    <p>The measure of the total magnetic field lines passing through a given surface area. Its SI unit is the Weber (Wb).</p>
+                </details>
+                <details>
+                    <summary>Faraday's Law of Induction</summary>
+                    <p>States that the magnitude of the induced EMF in any closed circuit is equal to the rate of change of the magnetic flux through the circuit. (ε = -dΦ/dt)</p>
+                </details>
+                <details>
+                    <summary>Lenz's Law</summary>
+                    <p>States that the direction of the electric current induced in a conductor by a changing magnetic field is such that the magnetic field created by the induced current opposes the initial change in magnetic flux.</p>
+                </details>
+                <details>
+                    <summary>Motional EMF</summary>
+                    <p>The EMF induced in a conductor moving through a constant magnetic field. (ε = Blv)</p>
+                </details>
+                 <details>
+                    <summary>Self-Inductance (L)</summary>
+                    <p>The property of a coil by virtue of which it opposes any change in the strength of current flowing through it by inducing an EMF in itself. Its SI unit is the Henry (H).</p>
+                </details>
+                 <details>
+                    <summary>Mutual Inductance (M)</summary>
+                    <p>The phenomenon where a change of current in one coil induces an EMF in an adjacent coil.</p>
+                </details>
+            </div>
+        </div>
+
+        <!-- Section 5: Video Resources -->
+        <div id="section5" class="section">
+            <h2>5. Further Learning: Video Resources</h2>
+            <p>Sometimes, watching a lecture can help solidify concepts. Here is an excellent lecture by Prof. Walter Lewin explaining Electromagnetic Induction.</p>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/acU912pG1kY" title="YouTube video player: Walter Lewin's lecture on Electromagnetic Induction" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Designed for interactive & differentiated learning. Happy studying!</p>
+        </footer>
+
+    </div>
+
+    <script>
+    // --- SCRIPT FOR SECTION 1: MAGNETIC FLUX CALCULATOR ---
+    const bSlider = document.getElementById('b-slider');
+    const aSlider = document.getElementById('a-slider');
+    const thetaSlider = document.getElementById('theta-slider');
+    const bValueSpan = document.getElementById('b-value');
+    const aValueSpan = document.getElementById('a-value');
+    const thetaValueSpan = document.getElementById('theta-value');
+    const fluxOutput = document.getElementById('flux-output');
+
+    function updateFlux() {
+        const b = parseFloat(bSlider.value);
+        const a = parseFloat(aSlider.value);
+        const theta = parseFloat(thetaSlider.value);
+        
+        // Update display values
+        bValueSpan.textContent = b.toFixed(2);
+        aValueSpan.textContent = a.toFixed(2);
+        thetaValueSpan.textContent = theta;
+        
+        // Calculate flux
+        const thetaRad = theta * (Math.PI / 180); // Convert degrees to radians
+        const flux = b * a * Math.cos(thetaRad);
+        
+        fluxOutput.textContent = flux.toFixed(4) + ' Wb';
+    }
+
+    bSlider.addEventListener('input', updateFlux);
+    aSlider.addEventListener('input', updateFlux);
+    thetaSlider.addEventListener('input', updateFlux);
+    // Initial calculation on page load
+    updateFlux();
+
+    // --- SCRIPT FOR SECTION 2: LENZ'S LAW SIMULATION ---
+    const canvas = document.getElementById('lenz-law-canvas');
+    const ctx = canvas.getContext('2d');
+    const explanationDiv = document.getElementById('lenz-law-explanation');
+
+    let isDragging = false;
+    let lastMouseX = 0;
+    
+    const magnet = {
+        x: 50,
+        y: 125,
+        width: 100,
+        height: 50
+    };
+
+    const coil = {
+        x: 400,
+        y: 125,
+        radius: 60,
+        turns: 5
+    };
+
+    const galvanometer = {
+        x: 400,
+        y: 220,
+        radius: 25
+    };
+    let needleAngle = 0;
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Magnet
+        // North Pole (Red)
+        ctx.fillStyle = '#d9534f';
+        ctx.fillRect(magnet.x + magnet.width / 2, magnet.y - magnet.height / 2, magnet.width / 2, magnet.height);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('N', magnet.x + magnet.width * 0.75, magnet.y + 8);
+        
+        // South Pole (Blue)
+        ctx.fillStyle = '#007bff';
+        ctx.fillRect(magnet.x, magnet.y - magnet.height / 2, magnet.width / 2, magnet.height);
+        ctx.fillStyle = 'white';
+        ctx.fillText('S', magnet.x + magnet.width * 0.25, magnet.y + 8);
+
+        // Draw Coil
+        ctx.strokeStyle = '#8B4513'; // Brown color for coil
+        ctx.lineWidth = 3;
+        for (let i = 0; i < coil.turns; i++) {
+            ctx.beginPath();
+            ctx.ellipse(coil.x, coil.y, 20, coil.radius, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Draw Galvanometer
+        ctx.beginPath();
+        ctx.arc(galvanometer.x, galvanometer.y, galvanometer.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#333';
+        ctx.fillText('G', galvanometer.x, galvanometer.y + 8);
+        
+        // Draw Galvanometer Needle
+        ctx.save();
+        ctx.translate(galvanometer.x, galvanometer.y);
+        ctx.rotate(needleAngle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -galvanometer.radius * 0.8);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+        
+        // Gradually return needle to zero
+        needleAngle *= 0.9;
+        if (Math.abs(needleAngle) < 0.01) needleAngle = 0;
+
+        requestAnimationFrame(draw);
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        
+        if (mouseX > magnet.x && mouseX < magnet.x + magnet.width &&
+            mouseY > magnet.y - magnet.height/2 && mouseY < magnet.y + magnet.height/2) {
+            isDragging = true;
+            lastMouseX = mouseX;
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+        explanationDiv.textContent = "Move the magnet to see what happens.";
+    });
+    
+    canvas.addEventListener('mouseleave', () => {
+        isDragging = false;
+        explanationDiv.textContent = "Move the magnet to see what happens.";
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const dx = mouseX - lastMouseX;
+        
+        magnet.x += dx;
+        lastMouseX = mouseX;
+
+        const proximity = Math.abs(magnet.x + magnet.width - coil.x);
+        
+        if (proximity < 150) {
+            let deflection = (dx / proximity) * 5; // A simple model for flux change
+            needleAngle = Math.max(-1, Math.min(1, -deflection)); // Cap the deflection
+            
+            if (dx > 0 && proximity < 100) { // Moving towards the coil
+                explanationDiv.innerHTML = "<strong>Moving North pole TOWARDS coil:</strong> Flux increases. Coil creates a North pole to REPEL. Current is anti-clockwise (viewed from right).";
+            } else if (dx < 0 && proximity < 100) { // Moving away from the coil
+                explanationDiv.innerHTML = "<strong>Moving North pole AWAY from coil:</strong> Flux decreases. Coil creates a South pole to ATTRACT. Current is clockwise (viewed from right).";
+            } else {
+                 explanationDiv.textContent = "Move the magnet closer to the coil.";
+            }
+        } else {
+            needleAngle = 0;
+            explanationDiv.textContent = "Move the magnet closer to the coil.";
+        }
+    });
+
+    draw();
+
+    // --- SCRIPT FOR SECTION 3: QUIZ ---
+    const quizForm = document.getElementById('quiz-form');
+    quizForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Stop form from submitting the traditional way
+
+        const answers = { q1: 'energy', q2: 'north', q3: 'resistance' };
+        let score = 0;
+        const totalQuestions = Object.keys(answers).length;
+        
+        // Reset previous results
+        document.querySelectorAll('.question').forEach(q => {
+            q.classList.remove('correct', 'incorrect');
+        });
+
+        for (const qNum in answers) {
+            const selectedOption = document.querySelector(`input[name="${qNum}"]:checked`);
+            const container = document.getElementById(`${qNum}-container`);
+            
+            if (selectedOption) {
+                if (selectedOption.value === answers[qNum]) {
+                    score++;
+                    container.classList.add('correct');
+                } else {
+                    container.classList.add('incorrect');
+                }
+            } else {
+                 container.classList.add('incorrect'); // Mark as incorrect if not answered
+            }
+        }
+
+        const resultsDiv = document.getElementById('quiz-results');
+        resultsDiv.innerHTML = `You scored ${score} out of ${totalQuestions}.`;
+        if (score === totalQuestions) {
+            resultsDiv.innerHTML += " Excellent work!";
+            resultsDiv.style.color = '#28a745';
+        } else {
+            resultsDiv.innerHTML += " Review the concepts and try again!";
+            resultsDiv.style.color = '#dc3545';
+        }
+    });
+
+    </script>
+
+</body>
+</html>
